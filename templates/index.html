@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Share</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        video {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .video-container {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Media Share</h1>
+    <div id="media-list">
+        {% for file in media_files %}
+        <div class="video-container">
+            <video controls width="600" id="video-{{ loop.index }}">
+                <!-- Try both MP4 and MKV -->
+                <source src="/media/{{ file }}" type="video/mp4">
+                <source src="/media/{{ file }}" type="video/x-matroska">
+                <track id="sub-{{ loop.index }}" kind="subtitles" srclang="en" label="English">
+                Your browser does not support the video tag.
+            </video>
+            <p>{{ file }}</p>
+        </div>
+        <script>
+            // Dynamically fetch subtitles for each video
+            fetch(`/subtitles/{{ file }}`)
+                .then(response => {
+                    if (response.ok) {
+                        const trackElement = document.getElementById("sub-{{ loop.index }}");
+                        trackElement.src = `/subtitles/{{ file }}`;
+                        trackElement.default = true;
+                    } else {
+                        console.warn("No subtitles found for {{ file }}");
+                    }
+                })
+                .catch(error => console.error("Error fetching subtitles:", error));
+        </script>
+        {% endfor %}
+    </div>
+</body>
+</html>

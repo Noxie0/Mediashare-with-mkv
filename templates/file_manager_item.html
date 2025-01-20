@@ -1,0 +1,12 @@
+<li>
+    {% if item.type == "folder" %}
+        <strong>{{ item.name }}</strong>
+        <ul>
+            {% for subitem in item.contents %}
+                {% include 'file_manager_item.html' with context %}
+            {% endfor %}
+        </ul>
+    {% elif item.type == "file" %}
+        <a href="{{ url_for('view_file', filepath=item.name) }}">{{ item.name }}</a>
+    {% endif %}
+</li>

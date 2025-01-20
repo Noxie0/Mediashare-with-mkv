@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media File Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+        li img {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Media File Manager</h1>
+    {% if parent %}
+        <p><a href="/">Back to Home</a></p>
+    {% endif %}
+    <ul>
+        {% for item in file_structure %}
+        <li>
+            {% if item.type == "folder" %}
+                <img src="/static/icons/folder.png" alt="Folder Icon">
+                <a href="{{ url_for('view_file', filepath=item.name if not parent else parent + '/' + item.name) }}">{{ item.name }}</a>
+            {% elif item.type == "file" %}
+                <img src="/static/icons/video.png" alt="Video Icon">
+                <a href="{{ url_for('view_file', filepath=item.name if not parent else parent + '/' + item.name) }}">{{ item.name }}</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
